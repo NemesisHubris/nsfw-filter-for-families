@@ -3,7 +3,7 @@
   "version": "3.1.1",
   "description": "On-device adult-content filtering for parents, with password-protected settings and separate image and video controls.",
   "author": "Navendu Pottekkat",
-  "homepage_url": "https://github.com/NemesisHubris/nsfw-filter-personal",
+  "homepage_url": "https://github.com/NemesisHubris/nsfw-filter-for-families",
   "permissions": [
     "storage",
     "offscreen",

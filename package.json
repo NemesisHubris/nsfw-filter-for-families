@@ -26,9 +26,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/NemesisHubris/nsfw-filter-personal"
+    "url": "https://github.com/NemesisHubris/nsfw-filter-for-families"
   },
-  "homepage": "https://github.com/NemesisHubris/nsfw-filter-personal",
+  "homepage": "https://github.com/NemesisHubris/nsfw-filter-for-families",
   "license": "GPL-3.0-only",
   "engines": {
     "node": ">=20.19"
