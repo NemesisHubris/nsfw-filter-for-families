@@ -13,12 +13,20 @@ The [Chrome Web Store version](https://chrome.google.com/webstore/detail/nsfw-fi
 
 ![Demo of NSFW Filter extension in action.](demo/images/demo.gif)
 
-# Added features
+# What I added
 
-- Optional password or PIN to lock filter settings and the allowed-sites list.
-- Separate image and video strictness sliders, including video posters.
-- Expanded detection for canvas drawings, open shadow DOM, SVG and responsive images, CSS backgrounds, animated images, and embedded frames.
-- Improved handling of changing media, video previews and seeking, with fixes for restoring page styles and recovering from unavailable media.
+These additions build on the original NSFW Filter:
+
+- **Password-protected settings:** an optional password or PIN protects filter settings and the allowed-sites list. “Lock now” locks every open settings page.
+- **Browser-policy guidance:** a warning and bundled help explain how to prevent disabling or removing the extension. The warning disappears when the browser confirms force-install protection.
+- **Separate strictness controls:** independent sliders for images and videos, including video posters. Existing users keep their previous strictness when upgrading.
+- **More image coverage:** detection for canvas drawings, images inside open shadow DOM, SVG images, and responsive images that change with the page layout.
+- **More background coverage:** detection for CSS pseudo-element backgrounds, including previews that use them.
+- **Animated-image checks:** sample additional frames instead of relying only on the first still image.
+- **Embedded-media coverage:** extend filtering into embedded frames and supported blank or generated frames.
+- **Video and changing-media fixes:** improve handling of previews, seeking, source changes, and content that changes after loading; reduce flashes before filtering.
+- **Page-compatibility fixes:** restore original page styles, clear stale background blocks after elements shrink, and avoid repeatedly retrying unavailable video frames.
+- **Family-focused presentation:** a new name, links to this repository for feedback, and a personal Ko-fi support link.
 
 # Usage
 
