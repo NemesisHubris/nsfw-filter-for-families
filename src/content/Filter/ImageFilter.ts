@@ -174,7 +174,9 @@ export class ImageFilter extends Filter implements IImageFilter {
         this.showImage(image)
       }
     } catch {
-      if (current()) this.showImage(image)
+      if (!current() || this.isBlocked(image)) return
+      image.dataset.nsfwFilterStatus = 'unavailable'
+      this.hideElement(image)
     }
   }
 

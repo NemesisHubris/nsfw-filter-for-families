@@ -75,6 +75,7 @@ export type OffscreenClassifyResponse = {
 
 export class PredictionResponse {
   public readonly result: boolean
+  public readonly error?: string
   public readonly message: string
   public readonly url: string
 
@@ -84,6 +85,7 @@ export class PredictionResponse {
       : `Prediction result is ${result} for image ${url}`
 
     this.url = url
+    this.error = error
     this.result = result
     this.message = message
   }

@@ -330,6 +330,7 @@ export class BackgroundImageFilter extends Filter implements IBackgroundImageFil
     layer: BackgroundLayer
   ): Promise<void> {
     let blocked = false
+    let unavailable = false
 
     for (const url of urls) {
       try {
@@ -339,7 +340,7 @@ export class BackgroundImageFilter extends Filter implements IBackgroundImageFil
           break
         }
       } catch {
-        // Fail open: an unanswered background is the page's own, not ours to keep.
+        unavailable = true
       }
     }
 
@@ -349,6 +350,11 @@ export class BackgroundImageFilter extends Filter implements IBackgroundImageFil
     if (blocked) {
       this.blockedItems++
       element.dataset[layer.statusKey] = 'nsfw'
+      return
+    }
+
+    if (unavailable) {
+      element.dataset[layer.statusKey] = 'unavailable'
       return
     }
 

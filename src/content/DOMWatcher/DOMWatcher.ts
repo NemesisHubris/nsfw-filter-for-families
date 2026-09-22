@@ -317,13 +317,11 @@ export class DOMWatcher implements IDOMWatcher {
     else if (attribute !== 'src' && attribute !== 'poster') this.backgroundFilter.checkElement(element)
   }
 
-  // A src swap fires loadstart, which VideoFilter already treats as new media; a
-  // poster swap fires nothing, so it has to come from here. It replaces the
-  // preview, not the footage, and so is not a media change.
+  // Hide a new source before loadstart fires; a poster changes only the preview.
   private checkVideo (video: HTMLVideoElement, attribute: string | null): void {
     if (attribute === 'style') this.videoFilter.checkStyleMutation(video)
     else if (attribute === 'poster') this.videoFilter.checkPoster(video)
-    else this.videoFilter.analyzeVideo(video, false)
+    else this.videoFilter.analyzeVideo(video, attribute === 'src')
   }
 
   // Backgrounds selected through other attributes, through CSSOM insertRule, or
