@@ -19,7 +19,7 @@ export const Header: React.FC = () => {
         <Wordmark>
           <Title>
             <span id="logo-first-letters">NSFW</span>
-            <span> Filter</span>
+            <span> Filter for Families</span>
           </Title>
           <Version>v{version}</Version>
         </Wordmark>

@@ -24,7 +24,7 @@ export const Logo: React.FC<{ size?: number }> = ({ size = 16 }) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     role="img"
-    aria-label="NSFW Filter"
+    aria-label="NSFW Filter for Families"
   >
     <path d={PATH} />
   </Svg>

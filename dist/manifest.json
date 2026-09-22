@@ -1,9 +1,9 @@
 {
-  "name": "NSFW Filter",
+  "name": "NSFW Filter for Families",
   "version": "3.1.1",
-  "description": "Free, open source, and privacy-focused browser extension to block \"not safe for work\" content.",
+  "description": "On-device adult-content filtering for parents, with password-protected settings and separate image and video controls.",
   "author": "Navendu Pottekkat",
-  "homepage_url": "https://nsfw-filter.com",
+  "homepage_url": "https://github.com/NemesisHubris/nsfw-filter-personal",
   "permissions": [
     "storage",
     "offscreen",
@@ -45,7 +45,7 @@
       "48": "images/icon48.png",
       "128": "images/icon128.png"
     },
-    "default_title": "NSFW Filter",
+    "default_title": "NSFW Filter for Families",
     "default_popup": "src/popup.html"
   },
   "options_ui": {

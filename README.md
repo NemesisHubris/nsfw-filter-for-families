@@ -1,13 +1,13 @@
-# <img src="demo/images/logo-mark.svg" width="34" align="middle" alt=""> NSFW Filter
+# <img src="demo/images/logo-mark.svg" width="34" align="middle" alt=""> NSFW Filter for Families
 
 > [!NOTE]
-> This is my personal build of [NSFW Filter](https://github.com/nsfw-filter/nsfw-filter). It combines my custom changes and is not intended to be merged back into the original repository.
+> NSFW Filter for Families is my personal, parent-focused build of [NSFW Filter](https://github.com/nsfw-filter/nsfw-filter). It combines my custom changes and is not intended to be merged back into the original repository.
 
-A free, open source, and privacy-focused browser extension to block "not safe for work" content.
+An open-source, on-device adult-content filter designed for parents setting up a family browser.
 
 Images are classified on your device with TensorFlow.js. Nothing is uploaded, and no data leaves your browser.
 
-NSFW Filter ships two models you can switch between in the popup: a small, accurate Vision Transformer (ViT-384) that classifies images as safe or not safe (the default), and the original [NSFWJS](https://github.com/infinitered/nsfwjs) MobileNet model.
+NSFW Filter for Families ships two models you can switch between in the popup: a small, accurate Vision Transformer (ViT-384) that classifies images as safe or not safe (the default), and the original [NSFWJS](https://github.com/infinitered/nsfwjs) MobileNet model.
 
 The [Chrome Web Store version](https://chrome.google.com/webstore/detail/nsfw-filter/kmgagnlkckiamnenbpigfaljmanlbbhh) is the original release and does not include these personal changes.
 
@@ -24,13 +24,19 @@ The [Chrome Web Store version](https://chrome.google.com/webstore/detail/nsfw-fi
 
 To use this personal build, [build from source](#development), then open `chrome://extensions`, enable **Developer mode**, select **Load unpacked**, and choose the `dist` directory.
 
-When you load web pages, NSFW Filter will first hide all images and only show those classified as safe.
+When you load web pages, NSFW Filter for Families will first hide all images and only show those classified as safe.
 
 Click the icon in your extensions tab to open the popup. From there you can turn protection on or off, adjust how strict the filter is, choose how flagged images are handled (blur, grayscale, or hide), pick which model does the classifying, and allow specific sites.
 
 Set an optional password or PIN under **Advanced** to lock filter settings. A password does not prevent disabling or removing the extension; see [Chrome's force-install policy](https://chromeenterprise.google/policies/extension-install-forcelist/) for that.
 
 ![NSFW Filter popup](demo/images/popup-window.png)
+
+# License and attribution
+
+Based on [NSFW Filter](https://github.com/nsfw-filter/nsfw-filter) by Navendu Pottekkat and its contributors. This modified version remains under [GPL-3.0-only](LICENSE); personal changes and branding updated September 22, 2026. Original author and contributor credits are retained below.
+
+[Support this personal version on Ko-fi](https://ko-fi.com/kindlemodshelfguy).
 
 # Development
 

@@ -193,7 +193,7 @@ const createUnhideMenu = (): void => {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: UNHIDE_MENU_ID,
-      title: 'Unhide this (NSFW Filter)',
+      title: 'Unhide this (NSFW Filter for Families)',
       contexts: ['all'],
       visible: false
     })

@@ -11,6 +11,7 @@ export const Container = styled.div`
 
 export const Brand = styled.div`
   align-items: center;
+  min-width: 0;
   cursor: default;
   display: flex;
   gap: 7px;
@@ -18,6 +19,7 @@ export const Brand = styled.div`
 
 export const Wordmark = styled.div`
   align-items: baseline;
+  flex-wrap: wrap;
   display: flex;
   gap: 6px;
 `
@@ -43,6 +45,7 @@ export const Version = styled.span`
 
 export const ThemeToggle = styled.button`
   align-items: center;
+  flex-shrink: 0;
   background: none;
   border: none;
   color: ${props => props.theme.text.secondary};

@@ -36,7 +36,7 @@ export const Options: React.FC = () => {
     <Wrap>
       <Title>Allowed sites</Title>
       <Sub>
-        NSFW Filter leaves these sites unfiltered. A domain also covers its
+        NSFW Filter for Families leaves these sites unfiltered. A domain also covers its
         subdomains, so allowing example.com covers www.example.com. You can also
         allow the current site in one click from the toolbar popup.
       </Sub>
