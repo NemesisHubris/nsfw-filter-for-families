@@ -1,6 +1,6 @@
 import { Checkbox, Segmented, Select, Slider, Switch } from 'antd'
 import { ChevronDown, ChevronUp, Contrast, Droplet, EyeOff } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { TRAINED_MODELS, TRAINED_MODEL_LABELS, TrainedModel } from '../../../utils/models'
@@ -41,6 +41,16 @@ import {
 } from './styles'
 
 export const Production: React.FC = () => {
+  const pointerInteraction = useRef(false)
+  const clearPointerFocus = (): void => {
+    // The slider refocuses its handle after dragging; wait for that update.
+    requestAnimationFrame(() => {
+      const handle = document.activeElement
+      if (pointerInteraction.current && handle instanceof HTMLElement && handle.matches('.ant-slider-handle')) {
+        handle.blur()
+      }
+    })
+  }
   const dispatch = useDispatch()
   const [advancedOpen, setAdvancedOpen] = useState(false)
   const lock = useSettingsLock()
@@ -81,7 +91,11 @@ export const Production: React.FC = () => {
           { label: 'Image strictness', value: filterStrictness, action: setFilterStrictness },
           { label: 'Video strictness', value: videoStrictness, action: setVideoStrictness }
         ].map(({ label, value, action }) => (
-          <Field key={label}>
+          <Field
+            key={label}
+            onPointerDownCapture={() => { pointerInteraction.current = true }}
+            onKeyDownCapture={() => { pointerInteraction.current = false }}
+          >
             <FieldHead>
               <FieldLabel>{label}</FieldLabel>
               <FieldValue>{value}%</FieldValue>
@@ -94,6 +108,7 @@ export const Production: React.FC = () => {
               disabled={lock.isLocked}
               tooltip={{ open: false }}
               onChange={(value: number) => dispatch(action(value))}
+              onChangeComplete={clearPointerFocus}
             />
             <SliderEnds>
               <span>Lenient</span>
