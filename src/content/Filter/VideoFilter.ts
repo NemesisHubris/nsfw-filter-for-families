@@ -404,7 +404,7 @@ export class VideoFilter extends Filter implements IVideoFilter {
     state.lastSampleTime = video.currentTime
 
     try {
-      const { result } = await this.requestToAnalyzeImage(new PredictionRequest(frameKey(), frame))
+      const { result } = await this.requestToAnalyzeImage(new PredictionRequest(frameKey(), frame, 'video'))
       if (!this.stillCurrent(state, generation)) return
       if (first) state.framePending = false
 
@@ -478,7 +478,7 @@ export class VideoFilter extends Filter implements IVideoFilter {
     const current = (): boolean =>
       this.stillCurrent(state, generation) && state.posterGeneration === posterGeneration && video.poster === poster
 
-    this.requestToAnalyzeImage(new PredictionRequest(poster))
+    this.requestToAnalyzeImage(new PredictionRequest(poster, undefined, 'video'))
       .then(({ result }) => {
         if (!current()) return
 

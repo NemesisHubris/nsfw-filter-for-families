@@ -105,14 +105,14 @@ const initRuntime = async (): Promise<Runtime> => {
   await ensureOffscreenDocument()
 
   const store = await createChromeStore({ createStore })(rootReducer)
-  const { enabled, logging, filterStrictness, trainedModel } = store.getState().settings
+  const { enabled, logging, filterStrictness, trainedModel, videoStrictness } = store.getState().settings
   refreshActionBadge(enabled)
 
   const logger = new Logger()
   if (logging === true) logger.enable()
 
   const model = new OffscreenModel()
-  model.setSettings(filterStrictness, logging, trainedModel)
+  model.setSettings(filterStrictness, logging, trainedModel, videoStrictness)
 
   const queue = new Queue(model, logger, store)
 
@@ -121,7 +121,7 @@ const initRuntime = async (): Promise<Runtime> => {
   // onto the badge, and push model/strictness/logging to the offscreen document
   // as they change (it swaps the model in place, gated on its prediction chain).
   // Guard on change so per-image statistics ticks don't trigger any of this.
-  let applied = { enabled, logging, filterStrictness, trainedModel }
+  let applied = { enabled, logging, filterStrictness, trainedModel, videoStrictness }
   store.subscribe(() => {
     const next = store.getState().settings
     if (next.enabled !== applied.enabled) refreshActionBadge(next.enabled)
@@ -129,14 +129,16 @@ const initRuntime = async (): Promise<Runtime> => {
     if (
       next.logging !== applied.logging ||
       next.filterStrictness !== applied.filterStrictness ||
+      next.videoStrictness !== applied.videoStrictness ||
       next.trainedModel !== applied.trainedModel
     ) {
       if (next.logging) logger.enable()
       else logger.disable()
-      model.setSettings(next.filterStrictness, next.logging, next.trainedModel)
+      model.setSettings(next.filterStrictness, next.logging, next.trainedModel, next.videoStrictness)
       // Only a new verdict invalidates cached predictions; a logging toggle
       // doesn't, so don't force re-classification of already-seen images for it.
-      if (next.filterStrictness !== applied.filterStrictness || next.trainedModel !== applied.trainedModel) {
+      if (next.filterStrictness !== applied.filterStrictness ||
+          next.videoStrictness !== applied.videoStrictness || next.trainedModel !== applied.trainedModel) {
         queue.clearCache()
       }
     }
@@ -145,6 +147,7 @@ const initRuntime = async (): Promise<Runtime> => {
       enabled: next.enabled,
       logging: next.logging,
       filterStrictness: next.filterStrictness,
+      videoStrictness: next.videoStrictness,
       trainedModel: next.trainedModel
     }
   })
@@ -219,6 +222,7 @@ type IncomingMessage = {
   type?: string
   url?: unknown
   source?: unknown
+  mediaType?: unknown
 }
 
 // Image classification requests coming from content scripts.
@@ -229,6 +233,7 @@ chrome.runtime.onMessage.addListener((request: IncomingMessage, sender, sendResp
   if (typeof request?.url !== 'string') return
 
   const { url } = request
+  const mediaType = request.mediaType === 'video' ? 'video' : 'image'
   const source = typeof request.source === 'string' ? request.source : undefined
 
   getRuntime()
@@ -237,7 +242,7 @@ chrome.runtime.onMessage.addListener((request: IncomingMessage, sender, sendResp
       // Guarantee the requesting tab is known even after a worker restart.
       queue.addTabIdUrl(tabIdUrl)
 
-      queue.predict(url, tabIdUrl, source)
+      queue.predict(url, tabIdUrl, source, mediaType)
         .then(result => sendResponse(new PredictionResponse(result, url)))
         .catch(err => sendResponse(new PredictionResponse(false, url, err.message)))
     })
@@ -290,12 +295,12 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 chrome.runtime.onConnect.addListener(port => port.onDisconnect.addListener(() => {
   getRuntime()
     .then(({ store, logger, model, queue }) => {
-      const { enabled, logging, filterStrictness, trainedModel } = store.getState().settings
+      const { enabled, logging, filterStrictness, trainedModel, videoStrictness } = store.getState().settings
       refreshActionBadge(enabled)
 
       if (logging) logger.enable()
       else logger.disable()
-      model.setSettings(filterStrictness, logging, trainedModel)
+      model.setSettings(filterStrictness, logging, trainedModel, videoStrictness)
 
       queue.clearCache()
     })

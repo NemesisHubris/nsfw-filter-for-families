@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { TRAINED_MODELS, TRAINED_MODEL_LABELS, TrainedModel } from '../../../utils/models'
-import { setFilterStrictness } from '../../redux/actions/settings'
+import { setFilterStrictness, setVideoStrictness } from '../../redux/actions/settings'
 import {
   setTrainedModel,
   setFilterEffect,
@@ -44,6 +44,7 @@ export const Production: React.FC = () => {
   const {
     enabled,
     filterStrictness,
+    videoStrictness,
     trainedModel,
     filterEffect,
     logging
@@ -66,23 +67,29 @@ export const Production: React.FC = () => {
       </PowerRow>
 
       <Card>
-        <Field>
-          <FieldHead>
-            <FieldLabel>Filter strictness</FieldLabel>
-            <FieldValue>{filterStrictness}%</FieldValue>
-          </FieldHead>
-          <Slider
-            min={1}
-            max={100}
-            value={filterStrictness}
-            tooltip={{ open: false }}
-            onChange={(value: number) => dispatch(setFilterStrictness(value))}
-          />
-          <SliderEnds>
-            <span>Lenient</span>
-            <span>Strict</span>
-          </SliderEnds>
-        </Field>
+        {[
+          { label: 'Image strictness', value: filterStrictness, action: setFilterStrictness },
+          { label: 'Video strictness', value: videoStrictness, action: setVideoStrictness }
+        ].map(({ label, value, action }) => (
+          <Field key={label}>
+            <FieldHead>
+              <FieldLabel>{label}</FieldLabel>
+              <FieldValue>{value}%</FieldValue>
+            </FieldHead>
+            <Slider
+              min={1}
+              max={100}
+              value={value}
+              ariaLabelForHandle={label}
+              tooltip={{ open: false }}
+              onChange={(value: number) => dispatch(action(value))}
+            />
+            <SliderEnds>
+              <span>Lenient</span>
+              <span>Strict</span>
+            </SliderEnds>
+          </Field>
+        ))}
 
         <EffectField>
           <FieldLabel>Filter effect</FieldLabel>

@@ -15,6 +15,7 @@ import { setWasmPaths } from '@tensorflow/tfjs-backend-wasm'
 
 import { Logger } from '../utils/Logger'
 import {
+  MediaType,
   OffscreenClassifyResponse,
   OffscreenRequest,
   RESTARTING_MESSAGE
@@ -125,6 +126,7 @@ const restartRealm = (): never => {
   restarting = true
   saveRestartState(sessionStorage, {
     filterStrictness: pendingStrictness,
+    videoStrictness: pendingVideoStrictness,
     trainedModel: pendingModelId,
     logging: pendingLogging
   })
@@ -138,6 +140,7 @@ const restartRealm = (): never => {
 let activeClassifier: Classifier | null = null
 let bringingUp = false
 let pendingStrictness = restartState?.filterStrictness ?? DEFAULT_FILTER_STRICTNESS
+let pendingVideoStrictness = restartState?.videoStrictness ?? pendingStrictness
 let pendingModelId: TrainedModel = restartState?.trainedModel ?? DEFAULT_TRAINED_MODEL
 let pendingLogging = restartState?.logging ?? false
 
@@ -280,7 +283,7 @@ const switchTo = async (id: TrainedModel): Promise<void> => {
   }
 }
 
-const predict = async (image: HTMLImageElement, label: string): Promise<boolean> => {
+const predict = async (image: HTMLImageElement, label: string, mediaType: MediaType): Promise<boolean> => {
   return await enqueue(async () => {
     // ensureUp() swallows the restart so it can't reject an unrelated caller, which
     // leaves the model null here. Say which it is: the service worker sends a lost
@@ -288,15 +291,18 @@ const predict = async (image: HTMLImageElement, label: string): Promise<boolean>
     // sending again.
     if (restarting) throw new Error(RESTARTING_MESSAGE)
     if (activeClassifier === null) throw new Error('Model is not loaded')
+    activeClassifier.setSettings({
+      filterStrictness: mediaType === 'video' ? pendingVideoStrictness : pendingStrictness
+    })
     const prediction = activeClassifier.predict(image, label)
     trackPrediction(activeClassifier, prediction)
     return await withTimeout(prediction, PREDICTION_TIMEOUT, 'Prediction')
   })
 }
 
-const classify = async (url: string, label: string): Promise<boolean> => {
+const classify = async (url: string, label: string, mediaType: MediaType = 'image'): Promise<boolean> => {
   ensureUp()
-  return await classifyImage(url, label, predict)
+  return await classifyImage(url, label, (image, imageLabel) => predict(image, imageLabel, mediaType))
 }
 
 chrome.runtime.onMessage.addListener((
@@ -308,6 +314,7 @@ chrome.runtime.onMessage.addListener((
 
   if (message.type === 'SET_SETTINGS') {
     pendingStrictness = message.filterStrictness
+    pendingVideoStrictness = message.videoStrictness ?? message.filterStrictness
     pendingModelId = message.trainedModel
     pendingLogging = message.logging
     if (pendingLogging) logger.enable()
@@ -323,7 +330,7 @@ chrome.runtime.onMessage.addListener((
   }
 
   if (message.type === 'CLASSIFY') {
-    classify(message.url, message.label ?? message.url)
+    classify(message.url, message.label ?? message.url, message.mediaType)
       .then(result => sendResponse({ result }))
       .catch((error: Error) => sendResponse({ result: false, error: error?.message ?? String(error) }))
 

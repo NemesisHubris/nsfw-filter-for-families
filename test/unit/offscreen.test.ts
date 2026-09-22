@@ -184,6 +184,7 @@ describe('offscreen => model lifecycle', () => {
     expect(reloads()).toBe(1)
     expect(savedRestartState()).toEqual({
       filterStrictness: 55,
+      videoStrictness: 55,
       trainedModel: 'MobileNet_v1.2',
       logging: false
     })
