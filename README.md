@@ -1,7 +1,7 @@
 # <img src="demo/images/logo-mark.svg" width="34" align="middle" alt=""> NSFW Filter
 
 > [!NOTE]
-> v3.0.0 released! See the release notes here: https://nsfwfilter.com/news/v3.0.0
+> This is my personal build of [NSFW Filter](https://github.com/nsfw-filter/nsfw-filter). It combines my custom changes and is not intended to be merged back into the original repository.
 
 A free, open source, and privacy-focused browser extension to block "not safe for work" content.
 
@@ -9,13 +9,20 @@ Images are classified on your device with TensorFlow.js. Nothing is uploaded, an
 
 NSFW Filter ships two models you can switch between in the popup: a small, accurate Vision Transformer (ViT-384) that classifies images as safe or not safe (the default), and the original [NSFWJS](https://github.com/infinitered/nsfwjs) MobileNet model.
 
-Download now for [Google Chrome](https://chrome.google.com/webstore/detail/nsfw-filter/kmgagnlkckiamnenbpigfaljmanlbbhh).
+The [Chrome Web Store version](https://chrome.google.com/webstore/detail/nsfw-filter/kmgagnlkckiamnenbpigfaljmanlbbhh) is the original release and does not include these personal changes.
 
 ![Demo of NSFW Filter extension in action.](demo/images/demo.gif)
 
+# Added features
+
+- Optional password or PIN to lock filter settings and the allowed-sites list.
+- Separate image and video strictness sliders, including video posters.
+- Expanded detection for canvas drawings, open shadow DOM, SVG and responsive images, CSS backgrounds, animated images, and embedded frames.
+- Improved handling of changing media, video previews and seeking, with fixes for restoring page styles and recovering from unavailable media.
+
 # Usage
 
-You can install the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/nsfw-filter/kmgagnlkckiamnenbpigfaljmanlbbhh) or [source](#development).
+To use this personal build, [build from source](#development), then open `chrome://extensions`, enable **Developer mode**, select **Load unpacked**, and choose the `dist` directory.
 
 When you load web pages, NSFW Filter will first hide all images and only show those classified as safe.
 
